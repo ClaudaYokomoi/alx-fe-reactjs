@@ -1,23 +1,23 @@
 import React, { useState } from "react";
-import { fetchUserData } from "../services/githubService";  // Make sure this path is correct
+import { fetchUserData } from "../services/githubService";
 
 function Search() {
   const [username, setUsername] = useState('');
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSearch = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(false);
+    setError('');
     setUserData(null);
 
     try {
       const data = await fetchUserData(username);
       setUserData(data);
-    } catch (error) {
-      setError(true);
+    } catch (err) {
+      setError("Looks like we can't find the user."); // Update error message here
     } finally {
       setLoading(false);
     }
@@ -36,7 +36,7 @@ function Search() {
       </form>
 
       {loading && <p>Loading...</p>}
-      {error && <p>Looks like we can't find the user.</p>}
+      {error && <p>{error}</p>} {/* Display the error message */}
       {userData && (
         <div>
           <img src={userData.avatar_url} alt={userData.login} width="100" />
